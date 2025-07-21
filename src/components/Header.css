@@ -1,0 +1,11 @@
+.links-nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+}
+
+.links-nav a:hover {
+  color: #007BFF;
+  text-decoration: underline;
+}
