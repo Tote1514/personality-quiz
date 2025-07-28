@@ -1,0 +1,23 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    height: 100%;
+    gap: 20px;
+    margin: 20px;
+}
+
+label {
+  font-weight: 1000;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+input[type="text"]{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
