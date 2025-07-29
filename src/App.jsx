@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 
 import Header from './components/Header';
 import UserForm from './components/UserForm';
+import Question from "./components/Question";
+import Results from './components/Results';
 import { UserProvider } from './components/UserContext';
 
 import './App.css'
@@ -13,6 +15,9 @@ function App() {
   const [userName, setUserName] = useState("");
   const [element, setElement] = useState("");
   const [artwork, setArtWork] = useState(null);
+
+  // declaring the string api 
+  const apiUrl = "https://collectionapi.metmuseum.org/public/collection/v1/search?q=";
 
     const questions = [
       {
@@ -41,7 +46,14 @@ function App() {
       "Blue 🔵": "Water",
       "Green 🟢": "Earth",
       "Yellow 🟡": "Air",
-      // Continue mapping all your possible options to a keyword
+      "Spring 🌸": "Earth",
+      "Summer ☀️": "Fire",
+      "Autumn 🍂": "Air",
+      "Winter ❄️": "Water",
+      "Morning 🌅": "Fire",
+      "Afternoon ☀️": "Earth",
+      "Evening 🌇": "Air",
+      "Night 🌙": "Water",
   };
 
   function handleAnswer(answer) {
@@ -55,16 +67,52 @@ function App() {
 
   function determineElement(answers) {
       const counts = {};
+
+      console.log("Answers:", answers);
       answers.forEach(function(answer) {
         const element = elements[answer];
         counts[element] = (counts[element] || 0) + 1;
       });
-      return Object.keys(counts).reduce(function(a, b) {
+
+      const temp = Object.keys(counts).reduce(function(a, b) {
         return counts[a] > counts[b] ? a : b
       });
+
+      console.log("Determined Element:", temp);
+      return temp;
   };
 
   const fetchArtwork = (element)=>{
+
+    if (element === "") {
+      setArtWork(null);
+      return;
+    }
+
+    console.log("Element:", element);
+
+    const url = `${apiUrl}${element}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+
+        if (data.total > 0) {
+          const randomIndex = Math.floor(Math.random() * data.total);
+          const objectId = data.objectIDs[randomIndex];
+          return fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${objectId}`);
+        } 
+        else {
+          throw new Error("No artwork found");
+        }
+      })
+      .then(response => response.json())
+      .then(artworkData => {
+        setArtWork(artworkData);
+      })
+      .catch(error => {
+        console.error("Error fetching artwork:", error);
+        setArtWork(null);
+      });
 
   };
 
@@ -86,6 +134,13 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<UserForm onSubmit={handleUserFormSubmit} />} />
+        <Route path='/quiz' element={
+          currentQuestionIndex < questions.length ? (
+              <Question question={questions[currentQuestionIndex].question}
+                        options={questions[currentQuestionIndex].options}
+                        onAnswer={handleAnswer} />)
+              : <Results element={element} artwork={artwork} />
+        }/>
       </Routes>
     </UserProvider>
   )
