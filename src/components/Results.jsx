@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import "./Results.css";
 
 export default function Results({element, artwork}){
 

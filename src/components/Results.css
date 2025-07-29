@@ -1,0 +1,14 @@
+.artwork {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.artwork img {
+  max-width: 30%;
+  border-radius: 10px;
+}
+
+.artwork p {
+  margin: 5px 0;
+  text-align: center;
+}

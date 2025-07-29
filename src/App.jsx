@@ -15,9 +15,7 @@ function App() {
   const [userName, setUserName] = useState("");
   const [element, setElement] = useState("");
   const [artwork, setArtWork] = useState(null);
-
-  // declaring the string api 
-  const apiUrl = "https://collectionapi.metmuseum.org/public/collection/v1/search?q=";
+  
 
     const questions = [
       {
@@ -82,7 +80,7 @@ function App() {
       return temp;
   };
 
-  const fetchArtwork = (element)=>{
+  const fetchArtwork = async (element)=>{
 
     if (element === "") {
       setArtWork(null);
@@ -90,6 +88,8 @@ function App() {
     }
 
     console.log("Element:", element);
+
+    const apiUrl = "https://collectionapi.metmuseum.org/public/collection/v1/search?q=";
 
     const url = `${apiUrl}${element}`;
     fetch(url)
